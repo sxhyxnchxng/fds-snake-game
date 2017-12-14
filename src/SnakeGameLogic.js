@@ -3,10 +3,7 @@ import { ROWS, COLS } from './config';
 function SnakeGameLogic() {
   // 각 마디의 좌표를 저장하는 배열
   this.joints = [
-    { x: 5, y: 3 },
-    { x: 4, y: 3 },
-    { x: 3, y: 3 },
-    { x: 2, y: 3 }
+    { x: 5, y: 3 }
   ];
 
   // 먹이의 좌표
@@ -49,34 +46,42 @@ SnakeGameLogic.prototype.nextState = function() {
   switch (this.direction) {
     case 'up':
       this.joints.unshift({ x: head.x, y: head.y - 1 });
+      head = this.joints[0];
       break;
     case 'down':
       this.joints.unshift({ x: head.x, y: head.y + 1 });
+      head = this.joints[0];
       break;
     case 'left':
       this.joints.unshift({ x: head.x - 1, y: head.y });
+      head = this.joints[0];
       break;
     default:
       this.joints.unshift({ x: head.x + 1, y: head.y });
+      head = this.joints[0];
   }
-  this.joints.pop();
+
 
 
 
   // 먹이를 먹으면 늘어나는 거
   if (head.x === this.fruit.x && head.y === this.fruit.y) {
-    this.joints.push({ x: this.joints[this.joints.length - 1].x, y: this.joints[this.joints.length - 1].y });
-    // 랜덤한 위치에 먹이 재소환
     this.fruit = { x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS) };
+    // pop을 하지 않으면 되네.....
+  } else {
+    this.joints.pop();
   }
-
+  // 먹이랑 몸이랑 겹치지 않게
 
   // 벽에 박으면 꽝
   if (head.x > COLS - 1 || head.x < 0 || head.y > ROWS - 1 || head.y < 0) {
     return false;
-  } else {
-    return true;
   }
+  return true;
+
+  // 자기 몸에 박으면 꽝
+
+  //
 
 }
 export default SnakeGameLogic;
